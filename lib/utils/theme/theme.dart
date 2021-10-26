@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class CustomColors {
-  static const primary = Color(0xff1464f6);
+  static const primary = Color(0xff40549e);
   static const primaryGradient = CustomColorGradient(
     Color(0xff6966fb),
     Color(0xff8b6cfb),
@@ -22,7 +22,7 @@ class CustomColors {
   static const leftMenuText = Color(0xffffffff);
   static const leftMenuIcon = Color(0xffffffff);
   static const leftMenuSelected = Color.fromRGBO(0, 0, 0, 0.12);
-  static const lightGreen = Color(0xff84bf31);
+  static const lightGreen = Color(0xff72BB53);
   static final disabled = primary;
   static const grayedout = Color(0x8Affffff);
 
