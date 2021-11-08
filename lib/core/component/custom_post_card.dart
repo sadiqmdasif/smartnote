@@ -5,16 +5,16 @@ import 'package:smartnote/utils/theme/theme.dart';
 import 'custom_image.dart';
 
 class CustomPostCard extends StatelessWidget {
-  CustomPostCard({
+   CustomPostCard({
     required this.BodyImageUrl,
     required this.LogoImageUrl,
     this.BodyImageHeight = 200,
     this.BodyImageWidth = 900,
     this.LogoImageHeight = 100,
     this.LogoImageWidth = 100,
-    this.compnayTitle,
-    this.heading,
-    this.time,
+    this.compnayTitle='',
+    this.heading='',
+    this.time='',
     this.onTap,
     this.isSelected = false,
     required this.child,
@@ -56,6 +56,7 @@ class CustomPostCard extends StatelessWidget {
                 ),
               ),
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
                     height: LogoImageHeight,
@@ -70,6 +71,7 @@ class CustomPostCard extends StatelessWidget {
                     ),
                   ),
                   Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         compnayTitle!,

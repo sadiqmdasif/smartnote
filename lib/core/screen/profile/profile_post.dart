@@ -28,11 +28,14 @@ class _ProfilePostTabState extends State<ProfilePostTab> {
         color: Colors.white,
         child: ListView.builder(
           scrollDirection: Axis.vertical,
-          itemCount: 5,
+          itemCount: 10,
           itemBuilder: (context, int index) {
             return CustomPostCard(
               BodyImageUrl: "assets/image/videoimage.png",
               LogoImageUrl: "assets/image/videoimage.png",
+              compnayTitle: "Hireing game developer",
+              heading: "Heading",
+              time: "10 pm 10/11/2021",
               child: Container(
                 height: 20,
                 width: 40,
