@@ -223,8 +223,8 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
               )
                   : null,
             ),
-            textInputAction:
-            widget.textInputAction ?? TextInputAction.next,
+                  textInputAction:
+                      widget.textInputAction ?? TextInputAction.next,
             textCapitalization: widget.textCapitalization,
             onChanged: widget.onChanged,
             onTap: widget.onTap,
