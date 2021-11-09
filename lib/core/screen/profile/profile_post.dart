@@ -11,20 +11,17 @@ class ProfilePostTab extends StatefulWidget {
 class _ProfilePostTabState extends State<ProfilePostTab> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 800,
-      child: Column(
-        children: [
-          Video_card_widget(),
-        ],
-      ),
+    return Column(
+      children: [
+        Video_card_widget(),
+      ],
     );
   }
 
   Widget Video_card_widget() {
     return SingleChildScrollView(
       child: Container(
-        height: MediaQuery.of(context).size.height * .5,
+        height: MediaQuery.of(context).size.height * .75,
         color: Colors.white,
         child: ListView.builder(
           scrollDirection: Axis.vertical,
