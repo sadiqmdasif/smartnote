@@ -10,8 +10,8 @@ class CustomPostCard extends StatelessWidget {
     required this.LogoImageUrl,
     this.BodyImageHeight = 200,
     this.BodyImageWidth = 900,
-    this.LogoImageHeight = 100,
-    this.LogoImageWidth = 100,
+    this.LogoImageHeight = 60,
+    this.LogoImageWidth = 60,
     this.compnayTitle='',
     this.heading='',
     this.time='',
@@ -43,31 +43,21 @@ class CustomPostCard extends StatelessWidget {
         child: Card(
           child: Column(
             children: [
-              Container(
-                height: BodyImageHeight,
-                width: BodyImageWidth,
-                decoration:
-                    BoxDecoration(borderRadius: BorderRadius.circular(5)),
-                child: CustomImage(
-                  BodyImageUrl,
-                  fit: BoxFit.cover,
-                  emptyImageColor: CustomColors.imageBackground,
-                  borderRadius: BorderRadius.circular(5.0),
-                ),
-              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(
-                    height: LogoImageHeight,
-                    width: LogoImageWidth,
-                    decoration:
-                        BoxDecoration(borderRadius: BorderRadius.circular(50)),
-                    child: CustomImage(
-                      LogoImageUrl,
-                      fit: BoxFit.cover,
-                      emptyImageColor: CustomColors.imageBackground,
-                      borderRadius: BorderRadius.circular(5.0),
+                  ClipOval(
+                    child: Container(
+                      height: LogoImageHeight,
+                      width: LogoImageWidth,
+                      decoration:
+                      BoxDecoration(borderRadius: BorderRadius.circular(50)),
+                      child: CustomImage.asset(
+                        LogoImageUrl,
+                        fit: BoxFit.cover,
+                        emptyImageColor: CustomColors.imageBackground,
+                        borderRadius: BorderRadius.circular(5.0),
+                      ),
                     ),
                   ),
                   Column(
@@ -115,7 +105,22 @@ class CustomPostCard extends StatelessWidget {
                     ],
                   ),
                 ],
-              )
+              ),
+
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 5,vertical: 5),
+                height: BodyImageHeight,
+                width: BodyImageWidth,
+                decoration:
+                    BoxDecoration(borderRadius: BorderRadius.circular(8)),
+                child: CustomImage.asset(
+                  BodyImageUrl,
+                  fit: BoxFit.cover,
+
+               emptyImageColor: CustomColors.imageBackground,
+                  borderRadius: BorderRadius.circular(5.0),
+                ),
+              ),
             ],
           ),
         ),

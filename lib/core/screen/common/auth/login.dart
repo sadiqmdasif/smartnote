@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:smartnote/core/component/custom_buttom.dart';
 import 'package:smartnote/core/component/custom_text_field.dart';
 import 'package:smartnote/core/component/custom_text_from_field.dart';
+import 'package:smartnote/core/screen/bottom_navigtor_bar/bottom_navigator.dart';
 import 'package:smartnote/core/screen/individual/registration.dart';
 import 'package:smartnote/core/screen/profile/proifle.dart';
 import 'package:smartnote/utils/theme/theme.dart';
@@ -86,8 +87,8 @@ class _LoginState extends State<Login> {
               ),
               CustomButton.small(
                 onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Profile()));
+                  Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (context) => BottomNavBar()));
                 },
                 text: "Sign in",
               ),

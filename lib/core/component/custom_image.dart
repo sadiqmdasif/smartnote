@@ -30,10 +30,10 @@ class CustomImage extends StatelessWidget {
     this.fit,
     this.width,
     this.height,
+    this.emptyImageColor = CustomColors.imageBackground,
     this.borderRadius = const BorderRadius.all(Radius.zero),
     Key? key,
-  })  : this.emptyImageColor = CustomColors.imageBackground,
-        this.imageUrl = '',
+  })  :this.imageUrl = '',
         this.imageBytes = null,
         super(key: key);
 
