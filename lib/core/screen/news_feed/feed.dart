@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smartnote/core/screen/common/notification/notification.dart';
 import 'package:smartnote/core/screen/profile/profile_post.dart';
 import 'package:smartnote/core/screen/profile/proifle.dart';
 import 'package:smartnote/utils/theme/theme.dart';
@@ -19,16 +20,22 @@ class _FeedPageState extends State<FeedPage> {
           child: Image.asset("assets/image/smartnote.jpeg"),
         ),
         actions: [
-          IconButton(onPressed: (){}, icon: Icon(Icons.map)),
-          IconButton(onPressed: (){}, icon: Icon(Icons.notifications_none_outlined))
+          IconButton(onPressed: () {}, icon: Icon(Icons.map)),
+          IconButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => NotificationPage()));
+              },
+              icon: Icon(Icons.notifications_none_outlined))
         ],
       ),
-      body:     DefaultTabController(
+      body: DefaultTabController(
         length: 4,
         initialIndex: 0,
         child: Column(
           children: [
-
             TabBar(
                 unselectedLabelColor: Colors.black,
                 indicatorSize: TabBarIndicatorSize.label,
@@ -41,8 +48,7 @@ class _FeedPageState extends State<FeedPage> {
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(30),
                           border: Border.all(
-                              color: CustomColors.primary,
-                              width: 1)),
+                              color: CustomColors.primary, width: 1)),
                       child: Align(
                         alignment: Alignment.center,
                         child: Text("All"),
@@ -53,7 +59,8 @@ class _FeedPageState extends State<FeedPage> {
                     child: Container(
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(30),
-                          border: Border.all(color: CustomColors.primary, width: 1)),
+                          border: Border.all(
+                              color: CustomColors.primary, width: 1)),
                       child: Align(
                         alignment: Alignment.center,
                         child: Text("Posts"),
@@ -65,8 +72,7 @@ class _FeedPageState extends State<FeedPage> {
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(30),
                           border: Border.all(
-                              color: CustomColors.primary,
-                              width: 1)),
+                              color: CustomColors.primary, width: 1)),
                       child: Align(
                         alignment: Alignment.center,
                         child: Text("Jobs"),
@@ -78,8 +84,7 @@ class _FeedPageState extends State<FeedPage> {
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(30),
                           border: Border.all(
-                              color: CustomColors.primary,
-                              width: 1)),
+                              color: CustomColors.primary, width: 1)),
                       child: Align(
                         alignment: Alignment.center,
                         child: Text("Scervices"),
@@ -90,7 +95,7 @@ class _FeedPageState extends State<FeedPage> {
             Expanded(
               child: TabBarView(
                 children: [
-                  ProfilePostTab(), 
+                  ProfilePostTab(),
                   ProfilePostTab(),
                   ProfilePostTab(),
                   ProfilePostTab(),
@@ -100,8 +105,6 @@ class _FeedPageState extends State<FeedPage> {
           ],
         ),
       ),
-
-
     );
   }
 }
