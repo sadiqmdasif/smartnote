@@ -10,7 +10,7 @@ const configDevLocal = Config(
 );
 
 const betaServer = Config(
-    apApiDomain: '103.192.157.58:4006',
+    apApiDomain: 'http://103.192.157.58:4006',
     apApiPort: null,
     apApiBasePath: 'api',
     urlType: "beta");
