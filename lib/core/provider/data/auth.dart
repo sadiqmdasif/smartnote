@@ -12,8 +12,9 @@ class Auth with ChangeNotifier {
   Future<void> login(String username, String password) async {
     username = username.trim();
     password = password.trim();
-
-    final result = await api.authenticate(username, password);
+    print(username);
+    final result = await api.post("/Account/Login",
+      body: jsonEncode({'userEmail': username, 'userPassword': password}),);
     print(result.body);
     notifyListeners();
   }

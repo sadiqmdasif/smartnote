@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:smartnote/core/component/custom_buttom.dart';
-import 'package:smartnote/core/component/custom_text_field.dart';
-import 'package:smartnote/core/component/custom_text_from_field.dart';
-import 'package:smartnote/core/screen/bottom_navigtor_bar/bottom_navigator.dart';
+import 'package:smartnote/core/provider/data/auth.dart';
 import 'package:smartnote/core/screen/individual/registration.dart';
-import 'package:smartnote/core/screen/profile/proifle.dart';
 import 'package:smartnote/utils/theme/theme.dart';
 
 class Login extends StatefulWidget {
@@ -18,104 +16,144 @@ class _LoginState extends State<Login> {
   final _userController = TextEditingController();
   final _passwordController = TextEditingController();
   var _isPasswordHide = true;
+  final _formKey = GlobalKey<FormState>();
+ Future? _login;
   @override
   Widget build(BuildContext context) {
+ final authData = Provider.of<Auth>(context);
+     login() {
+      setState(() {
+        _login = authData.login(
+            _userController.text, _passwordController.text)
+          ..then((_) {});
+      });
+    }
+
     return Scaffold(
-      body: Container(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                height: 150,
-                width: 350,
-                child: Image.asset("assets/image/smartnote.jpeg"),
-              ),
-              const SizedBox(
-                height: CustomSpacing.medium,
-              ),
-              const Text(
-                "Sign In",
-                style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black87),
-              ),
-              const SizedBox(
-                height: CustomSpacing.medium,
-              ),
-              const Text(
-                "Hi there! Nice to see you again",
-                style: TextStyle(fontSize: 14, color: Colors.grey),
-              ),
-              const SizedBox(
-                height: CustomSpacing.medium,
-              ),
-              const Text("Email",
-                  style: TextStyle(fontSize: 14, color: CustomColors.primary)),
-              TextFormField(
-                  key: const Key('email'),
-                  controller: _userController,
-                  decoration:
-                      const InputDecoration(hintText: "example@gmail.com")),
-              const SizedBox(
-                height: CustomSpacing.medium,
-              ),
-              const Text("Password",
-                  style: TextStyle(fontSize: 14, color: CustomColors.primary)),
-              TextFormField(
-                key: const Key('password'),
-                controller: _passwordController,
-                obscureText: _isPasswordHide,
-                decoration: InputDecoration(
-                  hintText: "*******",
-                  suffix: IconButton(
-                      onPressed: () {
-                        setState(() {
-                          _isPasswordHide = !_isPasswordHide;
-                        });
-                      },
-                      icon: Icon(_isPasswordHide
-                          ? Icons.visibility
-                          : Icons.visibility_off)),
+      body: SingleChildScrollView(
+        child: Container(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  height: 150,
+                  width: 350,
+                  child: Image.asset("assets/image/smartnote.jpeg"),
                 ),
-              ),
-              const SizedBox(
-                height: CustomSpacing.large,
-              ),
-              CustomButton.small(
-                onPressed: () {
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context) => BottomNavBar()));
-                },
-                text: "Sign in",
-              ),
-              const SizedBox(
-                height: CustomSpacing.large,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                const SizedBox(
+                  height: CustomSpacing.medium,
+                ),
+                const Text(
+                  "Sign In",
+                  style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87),
+                ),
+                const SizedBox(
+                  height: CustomSpacing.medium,
+                ),
+                const Text(
+                  "Hi there! Nice to see you again",
+                  style: TextStyle(fontSize: 14, color: Colors.grey),
+                ),
+            Form(
+              key:_formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text("Forgot Password"),
-                  FlatButton(
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => Registration()));
-                    },
-                    child: const Text(
-                      "Sign up",
-                      style: TextStyle(
-                          color: CustomColors.primary,
-                          fontWeight: FontWeight.bold),
+                  const SizedBox(
+                    height: CustomSpacing.medium,
+                  ),
+                  const Text("Email",
+                      style: TextStyle(fontSize: 14, color: CustomColors.primary)),
+                  TextFormField(
+                      validator: (value) =>
+                      value == null || value.isEmpty
+                          ? 'Useremail is required'
+                          : null,
+                      key: const Key('email'),
+                      controller: _userController,
+                      decoration:
+                      const InputDecoration(hintText: "example@gmail.com")),
+                  const SizedBox(
+                    height: CustomSpacing.medium,
+                  ),
+                  const Text("Password",
+                      style: TextStyle(fontSize: 14, color: CustomColors.primary)),
+                  TextFormField(
+                    key: const Key('password'),
+                    validator: (value) =>
+                    value == null || value.isEmpty
+                        ? 'Password is required'
+                        : null,
+                    controller: _passwordController,
+                    obscureText: _isPasswordHide,
+                    decoration: InputDecoration(
+                      hintText: "*******",
+                      suffix: IconButton(
+                          onPressed: () {
+                            setState(() {
+                              _isPasswordHide = !_isPasswordHide;
+                            });
+                          },
+                          icon: Icon(_isPasswordHide
+                              ? Icons.visibility
+                              : Icons.visibility_off)),
                     ),
-                  )
+                  ),
+                  const SizedBox(
+                    height: CustomSpacing.large,
+                  ),
                 ],
-              )
-            ],
+              ),
+            ),
+
+                FutureBuilder<void>(
+                    future: _login,
+                    builder: (ctx, snapshot) {
+                      return CustomButton(
+                        key: Key("Sign in"),
+                        text: 'Sign in',
+                        onPressed: () {
+                          if (_formKey.currentState != null &&
+                              _formKey.currentState!.validate() &&
+                              !(snapshot.connectionState ==
+                                  ConnectionState.waiting)) {
+                            print("dd");
+                            login();
+                          }
+                        },
+                      );
+                    }),
+                const SizedBox(
+                  height: CustomSpacing.large,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text("Forgot Password"),
+                    FlatButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Registration()));
+                      },
+                      child: const Text(
+                        "Sign up",
+                        style: TextStyle(
+                            color: CustomColors.primary,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    )
+                  ],
+                )
+              ],
+            ),
           ),
         ),
       ),

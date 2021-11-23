@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert' as convert;
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -37,73 +38,19 @@ class SmartNoteApi {
   @visibleForTesting
   String refreshToken = '';
 
-  Future<APIResult> authenticate(
+
+  Future authenticate(
     String username,
     String password,
   ) async {
-    Uri uri = _makeUri('/authenticate/login');
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    http.Response response;
-    try {
-      response = await client.post(
-        uri,
-        body: convert.jsonEncode({'username': username, 'password': password}),
-        headers: {'Content-Type': 'application/json; charset=UTF-8'},
-      ).timeout(Duration(seconds: _defaultTimeoutSeconds));
-      print("login response ${response.body}");
-    } on SocketException {
-      return APIResult(type: APIResultType.connectionProblem);
-    } on TimeoutException {
-      return APIResult(type: APIResultType.timeout);
-    } catch (err) {
-      return APIResult(type: APIResultType.error, errors: {
-        "general": [err.toString()]
-      });
-    }
-
-    var apiResult = APIResult(
-      type: response.statusCode < 400
-          ? APIResultType.success
-          : APIResultType.error,
-      body: response.body,
-      statusCode: response.statusCode,
+    Uri uri = _makeUri('/Account/Login');
+    var result=await client.post(
+      uri,
+      body: jsonEncode({'userEmail': username, 'userPassword': password}),
+      headers: {'Content-Type': 'application/json'},
     );
+    print(result.body);
 
-    if (response.statusCode >= 300) {
-      return apiResult;
-    }
-
-    var json = apiResult.data;
-
-    // successResponse property is mispelled in API response as of 2020/11/1
-    var successResponse = json['successResonse'];
-
-    if (successResponse == null) {
-      return apiResult;
-    }
-
-    await prefs.setString("Token", successResponse['token']);
-    await prefs.setString("RefreshToken", successResponse['refreshToken']);
-
-    var user = successResponse['user'];
-    if (user != null) {
-      prefs.setInt("userID", user['userID']);
-      prefs.setString("firstName", user['firstName']);
-      prefs.setString("lastName", user['lastName']);
-      prefs.setString("userName", user['userName']);
-      prefs.setString("role", user['role']);
-
-      apiUser = APIUser(
-        userID: user['userID'],
-        firstName: user['firstName'],
-        lastName: user['lastName'],
-        userName: user['userName'],
-        role: user['role'],
-      );
-    }
-
-    return apiResult;
   }
 
   void logout() async {
@@ -127,7 +74,7 @@ class SmartNoteApi {
     //  var uri = _makeUri('/api/Authenticate/RefreshToken');
     http.Response response;
     try {
-      response = await http.post(
+      response = await client.post(
         Uri.parse(
             'https://${_config.apApiDomain}/api/Authenticate/RefreshToken'),
         body: {
@@ -192,7 +139,7 @@ class SmartNoteApi {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String token = prefs.getString('Token') ?? '';
 
-    final requester = () => http.post(
+    var  result= await client.post(
           _makeUri(path, queryParams: queryParams),
           body: convert.jsonEncode(body),
           headers: {
@@ -200,6 +147,7 @@ class SmartNoteApi {
             'Content-Type': 'application/json; charset=UTF-8',
           },
         );
+    print(result.body);
   }
 
   Future put(String path,
