@@ -55,7 +55,7 @@ class CustomPostCard extends StatelessWidget {
                       child: CustomImage.asset(
                         LogoImageUrl,
                         fit: BoxFit.cover,
-                        emptyImageColor: CustomColors.imageBackground,
+
                         borderRadius: BorderRadius.circular(5.0),
                       ),
                     ),
@@ -116,8 +116,6 @@ class CustomPostCard extends StatelessWidget {
                 child: CustomImage.asset(
                   BodyImageUrl,
                   fit: BoxFit.cover,
-
-               emptyImageColor: CustomColors.imageBackground,
                   borderRadius: BorderRadius.circular(5.0),
                 ),
               ),

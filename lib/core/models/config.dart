@@ -1,12 +1,5 @@
 class Config {
-  const Config(
-      {required this.apApiDomain,
-      required this.apApiBasePath,
-      this.apApiPort,
-      this.urlType});
+  const Config({required this.appAPIBase});
 
-  final String apApiDomain;
-  final String apApiBasePath;
-  final int? apApiPort;
-  final String? urlType;
+  final String appAPIBase;
 }

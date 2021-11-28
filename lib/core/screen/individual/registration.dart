@@ -25,6 +25,7 @@ class _RegistrationState extends State<Registration> {
   var _isPasswordHide = true;
   var _isAgreed = false;
   Future? _siginup;
+  final _formKey = GlobalKey<FormState>();
 
 
   void getData() {
@@ -37,12 +38,12 @@ class _RegistrationState extends State<Registration> {
     singup() {
       setState(() {
         _siginup = authData.signup(
-            email:_emailController.text,
-           fname: _fullNameController.text,
-            lname:_fullNameController.text,
-            username:_usernameController.text,
-            password:_passwordController.text,
-            context:context)
+            _emailController.text,
+           _fullNameController.text,
+           _fullNameController.text,
+            _usernameController.text,
+            _passwordController.text,
+            context)
           ..then((_) {});
       });
     }
@@ -67,7 +68,7 @@ class _RegistrationState extends State<Registration> {
                 ),
                 Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: Column(
+                  child:Form(key:_formKey, child:Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const SizedBox(
@@ -79,8 +80,12 @@ class _RegistrationState extends State<Registration> {
                       TextFormField(
                           key: const Key('full_name'),
                           controller: _fullNameController,
+                          validator: (value) =>
+                          value == null || value.isEmpty
+                              ? 'Full name is required'
+                              : null,
                           decoration:
-                              const InputDecoration(hintText: "Your full name")),
+                          const InputDecoration(hintText: "Your full name")),
                       const SizedBox(
                         height: CustomSpacing.medium,
                       ),
@@ -90,8 +95,12 @@ class _RegistrationState extends State<Registration> {
                       TextFormField(
                           key: const Key('username'),
                           controller: _usernameController,
+                          validator: (value) =>
+                          value == null || value.isEmpty
+                              ? 'Username is required'
+                              : null,
                           decoration:
-                              const InputDecoration(hintText: "Enter username")),
+                          const InputDecoration(hintText: "Enter username")),
                       const SizedBox(
                         height: CustomSpacing.medium,
                       ),
@@ -126,6 +135,10 @@ class _RegistrationState extends State<Registration> {
                           key: const Key('email'),
                           keyboardType: TextInputType.emailAddress,
                           controller: _emailController,
+                          validator: (value) =>
+                          value == null || value.isEmpty
+                              ? 'Useremail is required'
+                              : null,
                           decoration: const InputDecoration(
                               hintText: "example@email.com")),
                       const SizedBox(
@@ -138,6 +151,10 @@ class _RegistrationState extends State<Registration> {
                         key: const Key('password'),
                         controller: _passwordController,
                         obscureText: _isPasswordHide,
+                        validator: (value) =>
+                        value == null || value.isEmpty
+                            ? 'Password is required'
+                            : null,
                         decoration: InputDecoration(
                           hintText: "*******",
                           suffix: IconButton(
@@ -165,8 +182,8 @@ class _RegistrationState extends State<Registration> {
                                 });
                               }),
                           const Text(
-                              "I agree to the Terms of Services and Privacy.",
-                          maxLines: 2,
+                            "I agree to the Terms of Services and Privacy.",
+                            maxLines: 2,
                           ),
                         ],
                       ),
@@ -175,7 +192,11 @@ class _RegistrationState extends State<Registration> {
                       ),
                       CustomButton.small(
                         onPressed: () {
-                          singup();
+                          if (_formKey.currentState != null &&
+                              _formKey.currentState!.validate()) {
+                            singup();
+
+                          }
                         },
                         text: "Continue",
                       ),
@@ -206,8 +227,7 @@ class _RegistrationState extends State<Registration> {
                         height: CustomSpacing.large,
                       ),
                     ],
-                  ),
-                ),
+                  ),),),
               ],
             ),
           ),

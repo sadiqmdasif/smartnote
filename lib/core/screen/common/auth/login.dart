@@ -13,8 +13,8 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  final _userController = TextEditingController();
-  final _passwordController = TextEditingController();
+  final _userController = TextEditingController(text: 'sheble@gmail.com');
+  final _passwordController = TextEditingController(text: 'sheble1234');
   var _isPasswordHide = true;
   final _formKey = GlobalKey<FormState>();
  Future? _login;
@@ -24,7 +24,8 @@ class _LoginState extends State<Login> {
      login() {
       setState(() {
         _login = authData.login(
-            _userController.text, _passwordController.text,context)
+            _userController.text, _passwordController.text,context
+        )
           ..then((_) {});
       });
     }
@@ -77,6 +78,7 @@ class _LoginState extends State<Login> {
                           : null,
                       key: const Key('email'),
                       controller: _userController,
+                      autofillHints: [AutofillHints.email],
                       decoration:
                       const InputDecoration(hintText: "example@gmail.com")),
                   const SizedBox(
@@ -91,6 +93,7 @@ class _LoginState extends State<Login> {
                         ? 'Password is required'
                         : null,
                     controller: _passwordController,
+                    autofillHints: [AutofillHints.password],
                     obscureText: _isPasswordHide,
                     decoration: InputDecoration(
                       hintText: "*******",
@@ -123,7 +126,6 @@ class _LoginState extends State<Login> {
                               _formKey.currentState!.validate() &&
                               !(snapshot.connectionState ==
                                   ConnectionState.waiting)) {
-                            print("dd");
                             login();
                           }
                         },

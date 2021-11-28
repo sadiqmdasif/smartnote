@@ -10,97 +10,149 @@ class Auth with ChangeNotifier {
   Auth(this.api);
 
   final SmartNoteApi api;
+  var _error = '';
 
-  // Future<void> login(String username, String password) async {
-  //   username = username.trim();
-  //   password = password.trim();
-  //   print(username);
-  //   final result = await api.post("/Account/Login",body: jsonEncode({'userEmail': username, 'userPassword': password}),);
-  //   print(result.body);
-  //   notifyListeners();
-  // }
-  Future<void> login(String username, String password, context) async {
+  Future<void> login(String username, String password,context) async {
     username = username.trim();
     password = password.trim();
-    print(username);
-    final result = await http.post(Uri.parse("http://103.192.157.58:4006/api/Account/Login"),
-        body: jsonEncode({'userEmail': username, 'userPassword': password},),
-        headers: {
-          'Content-Type': 'application/json; charset=UTF-8',
-        }
-    );
+    final result = await api.authenticate(username,password);
+    const genericError =
+        'There was a problem logging in. Please try again later.';
     print(result.body);
-    if(result.statusCode==200){
+    if (result.statusCode == 200) {
+      try {
+        Fluttertoast.showToast(
+            msg: "Login Succesfully",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 3,
+            backgroundColor: Colors.green.shade600,
+            textColor: Colors.white,
+            fontSize: 16.0
+        );
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>BottomNavBar()));
+
+      } catch (Exception) {
+        _error = genericError;
+      }
+    } else if (result.statusCode == 401) {
+      _error = 'Invalid password.';
       Fluttertoast.showToast(
-          msg: "Login Succesfully",
+          msg: _error,
           toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.red,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 3,
+          backgroundColor: Colors.red.shade600,
           textColor: Colors.white,
           fontSize: 16.0
       );
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>BottomNavBar()));
+    } else if (result.statusCode == 404) {
+      _error = 'User not found.';
+      Fluttertoast.showToast(
+          msg: _error,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 3,
+          backgroundColor: Colors.red.shade600,
+          textColor: Colors.white,
+          fontSize: 16.0
+      );
+    } else if (result.type == APIResultType.connectionProblem) {
+      _error = 'Please check your network connection.';
+      Fluttertoast.showToast(
+          msg: _error,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 3,
+          backgroundColor: Colors.red.shade600,
+          textColor: Colors.white,
+          fontSize: 16.0
+      );
+    } else {
+      _error = genericError;
+      Fluttertoast.showToast(
+          msg: _error,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 3,
+          backgroundColor: Colors.red.shade600,
+          textColor: Colors.white,
+          fontSize: 16.0
+      );
     }
-
-
     notifyListeners();
   }
+  Future<void> signup(String fname, String lname, String email,String username,String password,context) async {
+    username = username.trim();
+    password = password.trim();
+    lname=lname.trim();
+    fname=fname.trim();
+    email=email.trim();
+    final result = await api.singup(username,password,fname,lname,email);
+    const genericError =
+        'There was a problem logging in. Please try again later.';
+    print(result.body);
+    if (result.statusCode == 200) {
+      try {
+        Fluttertoast.showToast(
+            msg: "Login Succesfully",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 3,
+            backgroundColor: Colors.green.shade600,
+            textColor: Colors.white,
+            fontSize: 16.0
+        );
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>BottomNavBar()));
 
-
-  Future signup(
-      {required String fname,
-        required String lname,
-      required String email,
-      required String username,
-      required String password,
-      context
-      }) async {
-   var result = await http.post(Uri.parse("http://103.192.157.58:4006/api/Account/Register"), body:
-      jsonEncode({
-        "id": 0,
-        "createdAt": "2021-11-23T09:52:35.054Z",
-        "updatedAt": "2021-11-23T09:52:35.054Z",
-        "deletedAt": "2021-11-23T09:52:35.054Z",
-        "createdBy": 0,
-        "modifiedBy": 0,
-        "deletedBy": 0,
-        "isDeleted": true,
-        "isActive": true,
-        "firstName": fname,
-        "lastName": lname,
-        "roleName": "string",
-        "userName": username,
-        "userEmail": email,
-        "userPassword": password,
-        "imageUrl": "string",
-        "userPhone": "string",
-        "userGroup": "string",
-        "userStatus": true,
-        "pmsGroupID": 0,
-        "groupID": 0,
-        "dob": "2021-11-23T09:52:35.055Z"
-      }),
-       headers: {
-         'Content-Type': 'application/json; charset=UTF-8',
-       }
-   );
-   print(result.body);
-   if(result.statusCode==200){
-     Fluttertoast.showToast(
-         msg: "Registration Succesfully",
-         toastLength: Toast.LENGTH_SHORT,
-         gravity: ToastGravity.CENTER,
-         timeInSecForIosWeb: 1,
-         backgroundColor: Colors.red,
-         textColor: Colors.white,
-         fontSize: 16.0
-     );
-     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>BottomNavBar()));
-   }
-
+      } catch (Exception) {
+        _error = genericError;
+      }
+    } else if (result.statusCode == 401) {
+      _error = 'Invalid password.';
+      Fluttertoast.showToast(
+          msg: _error,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 3,
+          backgroundColor: Colors.red.shade600,
+          textColor: Colors.white,
+          fontSize: 16.0
+      );
+    } else if (result.statusCode == 404) {
+      _error = 'User not found.';
+      Fluttertoast.showToast(
+          msg: _error,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 3,
+          backgroundColor: Colors.red.shade600,
+          textColor: Colors.white,
+          fontSize: 16.0
+      );
+    } else if (result.type == APIResultType.connectionProblem) {
+      _error = 'Please check your network connection.';
+      Fluttertoast.showToast(
+          msg: _error,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 3,
+          backgroundColor: Colors.red.shade600,
+          textColor: Colors.white,
+          fontSize: 16.0
+      );
+    } else {
+      _error = genericError;
+      Fluttertoast.showToast(
+          msg: _error,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 3,
+          backgroundColor: Colors.red.shade600,
+          textColor: Colors.white,
+          fontSize: 16.0
+      );
+    }
     notifyListeners();
-
-    return result;
   }
 }

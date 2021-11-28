@@ -1,8 +1,13 @@
+
+
 import 'package:flutter/material.dart';
+import 'package:inview_notifier_list/inview_notifier_list.dart';
+import 'package:provider/provider.dart';
+import 'package:smartnote/core/component/action_clips.dart';
+import 'package:smartnote/core/component/video_card.dart';
+import 'package:smartnote/core/models/homepage.dart';
+import 'package:smartnote/core/provider/viewState/homepage_view_state.dart';
 import 'package:smartnote/core/screen/common/notification/notification.dart';
-import 'package:smartnote/core/screen/profile/profile_post.dart';
-import 'package:smartnote/core/screen/profile/proifle.dart';
-import 'package:smartnote/utils/theme/theme.dart';
 
 class FeedPage extends StatefulWidget {
   @override
@@ -12,6 +17,7 @@ class FeedPage extends StatefulWidget {
 class _FeedPageState extends State<FeedPage> {
   @override
   Widget build(BuildContext context) {
+    final viewState = Provider.of<HomepgaeViewState>(context);
     return Scaffold(
       appBar: AppBar(
         title: SizedBox(
@@ -31,80 +37,62 @@ class _FeedPageState extends State<FeedPage> {
               icon: Icon(Icons.notifications_none_outlined))
         ],
       ),
-      body: DefaultTabController(
-        length: 4,
-        initialIndex: 0,
-        child: Column(
-          children: [
-            TabBar(
-                unselectedLabelColor: Colors.black,
-                indicatorSize: TabBarIndicatorSize.label,
-                indicator: BoxDecoration(
-                    borderRadius: BorderRadius.circular(50),
-                    color: CustomColors.primary),
-                tabs: [
-                  Tab(
-                    child: Container(
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30),
-                          border: Border.all(
-                              color: CustomColors.primary, width: 1)),
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: Text("All"),
-                      ),
-                    ),
-                  ),
-                  Tab(
-                    child: Container(
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30),
-                          border: Border.all(
-                              color: CustomColors.primary, width: 1)),
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: Text("Posts"),
-                      ),
-                    ),
-                  ),
-                  Tab(
-                    child: Container(
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30),
-                          border: Border.all(
-                              color: CustomColors.primary, width: 1)),
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: Text("Jobs"),
-                      ),
-                    ),
-                  ),
-                  Tab(
-                    child: Container(
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30),
-                          border: Border.all(
-                              color: CustomColors.primary, width: 1)),
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: Text("Scervices"),
-                      ),
-                    ),
-                  ),
-                ]),
-            Expanded(
-              child: TabBarView(
-                children: [
-                  ProfilePostTab(),
-                  ProfilePostTab(),
-                  ProfilePostTab(),
-                  ProfilePostTab(),
+      body:CustomScrollView(
+        shrinkWrap: true,
+        slivers: [
+          SliverAppBar(
+            expandedHeight: 80,
+            flexibleSpace:ActionChipsRow<HomepageStatus>(
+                items: [
+                  ActionChipsRowItem(null, "All"),
+                  ActionChipsRowItem(HomepageStatus.post, "Post"),
+                  ActionChipsRowItem(HomepageStatus.jobs, "Jobs"),
+                  ActionChipsRowItem(HomepageStatus.services, "Services"),
                 ],
-              ),
+                onSelected: (HomepageStatus? status) =>
+                    viewState.setStatusFilter(status),
+                selected: viewState.statusFilter
             ),
-          ],
-        ),
-      ),
+          ),
+          SliverFillRemaining(
+            child:InViewNotifierList(
+              scrollDirection: Axis.vertical,
+              initialInViewIds: ['0'],
+              isInViewPortCondition:
+                  (double deltaTop, double deltaBottom, double viewPortDimension) {
+                return deltaTop < (0.5 * viewPortDimension) &&
+                    deltaBottom > (0.5 * viewPortDimension);
+              },
+              itemCount: 5,
+              builder: (BuildContext context, int index) {
+                return LayoutBuilder(
+                  builder: (BuildContext context, BoxConstraints constraints) {
+                    final InViewState? inViewState =
+                    InViewNotifierList.of(context);
+
+                    inViewState!.addContext(context: context, id: '$index');
+
+                    return AnimatedBuilder(
+                      animation: inViewState,
+                      builder: (context,child) {
+                        return CustomPostVideoCard(
+                          VideoUrl: "https://www.rmp-streaming.com/media/big-buck-bunny-360p.mp4",
+                          LogoImageUrl: "https://www.pinclipart.com/picdir/big/7-79815_drawing-microsoft-office-cartoon-encapsulated-postscript-woman-man.png",
+                          child: Container(),
+                          compnayTitle: "Dhaka Video",
+                          heading: "Hello! Dhaka",
+                          time: "10:00 pm",
+
+                        ) ;
+                      },
+                    );
+                  },
+                );
+              },
+            ),
+          )
+        ],
+      )
     );
   }
 }
