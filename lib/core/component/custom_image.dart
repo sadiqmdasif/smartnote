@@ -52,7 +52,7 @@ class CustomImage extends StatelessWidget {
   Widget _buildImage() {
     if (imageUrl != '') {
       return Image.network(
-        imageUrl!,
+        imageUrl,
         fit: fit,
         width: width,
         height: height,

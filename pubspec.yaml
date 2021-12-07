@@ -42,6 +42,12 @@ dependencies:
   fluttertoast: ^8.0.8
   inview_notifier_list: ^2.0.0
   better_player: ^0.0.79
+  image_picker: ^0.8.4+4
+  image_gallery_saver: ^1.7.1
+  file_saver: ^0.0.10
+  permission_handler: any
+  video_player: ^2.2.7
+  flutter_arc_speed_dial: ^2.0.0
 
 dev_dependencies:
   flutter_test:
