@@ -10,19 +10,21 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:smartnote/core/component/custom_buttom.dart';
+import 'package:smartnote/core/screen/bottom_navigtor_bar/bottom_navigator.dart';
 import 'package:video_player/video_player.dart';
 
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key? key, this.title}) : super(key: key);
+class VideoPickerPage extends StatefulWidget {
+  VideoPickerPage({Key? key, this.title}) : super(key: key);
 
   final String? title;
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _VideoPickerPageState createState() => _VideoPickerPageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _VideoPickerPageState extends State<VideoPickerPage> {
   List<XFile>? _imageFileList;
 
   set _imageFile(XFile? value) {
@@ -51,12 +53,7 @@ class _MyHomePageState extends State<MyHomePage> {
         controller = VideoPlayerController.file(File(file.path));
       }
       _controller = controller;
-      // In web, most browsers won't honor a programmatic call to .play
-      // if the video has a sound track (and is not muted).
-      // Mute the video so it auto-plays in web!
-      // This is not needed if the call to .play is the result of user
-      // interaction (clicking on a "play" button, for example).
-      final double volume = kIsWeb ? 0.0 : 1.0;
+      const double volume = kIsWeb ? 0.0 : 1.0;
       await controller.setVolume(volume);
       await controller.initialize();
       await controller.setLooping(true);
@@ -64,6 +61,7 @@ class _MyHomePageState extends State<MyHomePage> {
       setState(() {});
     }
   }
+   XFile? file;
 
   void _onImageButtonPressed(ImageSource source,
       {BuildContext? context, bool isMultiImage = false}) async {
@@ -71,10 +69,23 @@ class _MyHomePageState extends State<MyHomePage> {
       await _controller!.setVolume(0.0);
     }
     if (isVideo) {
-      final XFile? file = await _picker.pickVideo(
-          source: source, maxDuration: const Duration(seconds: 10));
+     file = await _picker.pickVideo(
+          source: source, maxDuration: const Duration(seconds: 30));
       await _playVideo(file);
     } 
+  }
+  @override
+  void initState() {
+    // TODO: implement initState
+        if(widget.title=="camera"){
+      isVideo = true;
+      _onImageButtonPressed(ImageSource.camera);
+    }
+    else{
+      isVideo = true;
+      _onImageButtonPressed(ImageSource.gallery);
+    }
+    super.initState();
   }
 
   @override
@@ -145,75 +156,109 @@ class _MyHomePageState extends State<MyHomePage> {
       _retrieveDataError = response.exception!.code;
     }
   }
+  bool btnStatus=false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title!),
+        title: const Text("Add Video",style: TextStyle(color: Colors.black),),
       ),
-      body: Center(
-        child: !kIsWeb && defaultTargetPlatform == TargetPlatform.android
-            ? FutureBuilder<void>(
-                future: retrieveLostData(),
-                builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
-                  switch (snapshot.connectionState) {
-                    case ConnectionState.none:
-                    case ConnectionState.waiting:
-                      return const Text(
-                        'You have not yet picked an video.',
-                        textAlign: TextAlign.center,
-                      );
-                    case ConnectionState.done:
-                      return _handlePreview();
-                    default:
-                      if (snapshot.hasError) {
-                        return Text(
-                          'Pick image/video error: ${snapshot.error}}',
-                          textAlign: TextAlign.center,
-                        );
-                      } else {
-                        return const Text(
-                          'You have not yet picked an video.',
-                          textAlign: TextAlign.center,
-                        );
+      body: !kIsWeb && defaultTargetPlatform == TargetPlatform.android
+          ? Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  maxLines: 4,
+                decoration: const InputDecoration(
+                labelText: 'Enter your Captions',
+                isCollapsed: true
+              ),
+              ),
+              ),
+              SizedBox(
+                height: 500,
+                child: FutureBuilder<void>(
+                    future: retrieveLostData(),
+                    builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
+                      switch (snapshot.connectionState) {
+                        case ConnectionState.none:
+                        case ConnectionState.waiting:
+                          return const Text(
+                            'You have not yet picked an video.',
+                            textAlign: TextAlign.center,
+                          );
+                        case ConnectionState.done:
+                          return _handlePreview();
+                        default:
+                          if (snapshot.hasError) {
+                            return Text(
+                              'Pick image/video error: ${snapshot.error}}',
+                              textAlign: TextAlign.center,
+                            );
+                          } else {
+                            return const Text(
+                              'You have not yet picked an video.',
+                              textAlign: TextAlign.center,
+                            );
+                          }
                       }
-                  }
-                },
+                    },
+                  ),
+              ),
+
+              SizedBox(
+                width: 200,
+                child: CustomButton.small(
+                  showProgressIndicator: btnStatus,
+                  onPressed: ()async{
+                    setState(() {
+                    btnStatus=true;
+                    });
+                     final snackBar = SnackBar(
+            content: Container(
+            height: 40,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.done,
+                  color: Colors.white,
+                ),
+                SizedBox(height: 8),
+                Text('Succesfully Upload'),
+              ],
+            ),
+          ),
+          backgroundColor: Colors.green.withOpacity(0.8),
+          behavior: SnackBarBehavior.floating,
+          width: 300,
+          padding: EdgeInsets.all(8),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(6),
+            ),
+          ),
+          duration: Duration(seconds: 2),
+        );
+       await Future.delayed(new Duration(seconds: 2), (){
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+           setState(() {
+           btnStatus=false;
+         });
+       // Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>BottomNavBar()), (route) => false);
+       });
+              await Future.delayed(new Duration(seconds: 3), (){
+        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>BottomNavBar()), (route) => false);
+       });
+                  },
+                  text: "Post",
+                ),
               )
-            : _handlePreview(),
-      ),
-      floatingActionButton: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: <Widget>[
-         Padding(
-            padding: const EdgeInsets.only(top: 16.0),
-            child: FloatingActionButton(
-              backgroundColor: Colors.red,
-              onPressed: () {
-                isVideo = true;
-                _onImageButtonPressed(ImageSource.gallery);
-              },
-              heroTag: 'video0',
-              tooltip: 'Pick Video from gallery',
-              child: const Icon(Icons.video_library),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 16.0),
-            child: FloatingActionButton(
-              backgroundColor: Colors.red,
-              onPressed: () {
-                isVideo = true;
-                _onImageButtonPressed(ImageSource.camera);
-              },
-              heroTag: 'video1',
-              tooltip: 'Take a Video',
-              child: const Icon(Icons.videocam),
-            ),
-          ),
-        ],
-      ),
+            ],
+          )
+          : _handlePreview(),
     );
   }
 
@@ -272,7 +317,7 @@ class AspectRatioVideoState extends State<AspectRatioVideo> {
       );
     } else {
       return Container(
-        height: 200,
+        height: 600,
       );
     }
   }

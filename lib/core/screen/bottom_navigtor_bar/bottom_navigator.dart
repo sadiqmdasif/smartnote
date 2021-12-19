@@ -34,16 +34,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-     // floatingActionButton:_getFloatingActionButton(),
-     floatingActionButton: _selectedIndex==0? FloatingActionButton(
-        onPressed: () { 
-        //  _getFloatingActionButton();
-          Navigator.push(context, MaterialPageRoute(builder: (context)=>MyHomePage(title:"title")));
-        },
-        tooltip: 'Increment',
-        child: Icon(Icons.add,size: 35,),
-        elevation: 5.0,
-      ):null,
+      floatingActionButton:_selectedIndex==0? _getFloatingActionButton():null,
       bottomNavigationBar: BottomNavigationBar(
         unselectedItemColor: const Color(0xff999999),
         items: const <BottomNavigationBarItem>[
@@ -88,8 +79,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
   }
     Widget _getFloatingActionButton() {
     return SpeedDialMenuButton(
-      mainFABPosX: 160,
-      mainFABPosY: 10,
+      mainFABPosX: 163,
+      mainFABPosY: 20,
       //if needed to close the menu after clicking sub-FAB
       isShowSpeedDial: _isShowDial,
       //manually open or close menu
@@ -103,40 +94,33 @@ class _BottomNavBarState extends State<BottomNavBar> {
           mini: false,
           child: Icon(Icons.add,size: 35,),
           onPressed: () {},
-
           closeMenuChild: Icon(Icons.close),
           closeMenuForegroundColor: Colors.white,
           closeMenuBackgroundColor: Colors.red),
       floatingActionButtonWidgetChildren: <FloatingActionButton>[
+        
         FloatingActionButton(
           mini: true,
-          child: Icon(Icons.volume_off),
+          child: Icon(Icons.video_library),
           onPressed: () {
-            //if need to close menu after click
-            _isShowDial = false;
-            setState(() {});
-          },
-          backgroundColor: Colors.pink,
-        ),
-        FloatingActionButton(
-          mini: true,
-          child: Icon(Icons.volume_down),
-          onPressed: () {
-            //if need to toggle menu after click
             _isShowDial = !_isShowDial;
-            setState(() {});
+           
+     Navigator.push(context, MaterialPageRoute(builder: (context)=>VideoPickerPage(title:"gallary")));
+          
           },
           backgroundColor: Colors.orange,
         ),
         FloatingActionButton(
           mini: true,
-          child: Icon(Icons.volume_up),
+          child: Icon(Icons.video_camera_back),
           onPressed: () {
-            //if no need to change the menu status
+     Navigator.push(context, MaterialPageRoute(builder: (context)=>VideoPickerPage(title:"camera")));
+           
           },
           backgroundColor: Colors.deepPurple,
         ),
       ],
+      isEnableAnimation: true,
       isSpeedDialFABsMini: true,
       paddingBtwSpeedDialButton: 30.0,
     );

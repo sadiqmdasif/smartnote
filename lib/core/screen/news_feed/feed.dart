@@ -76,7 +76,7 @@ class _FeedPageState extends State<FeedPage> {
                       animation: inViewState,
                       builder: (context,child) {
                         return CustomPostVideoCard(
-                          VideoUrl: "https://www.rmp-streaming.com/media/big-buck-bunny-360p.mp4",
+                          VideoUrl: "https://file-examples-com.github.io/uploads/2017/04/file_example_MP4_480_1_5MG.mp4",
                           LogoImageUrl: "https://www.pinclipart.com/picdir/big/7-79815_drawing-microsoft-office-cartoon-encapsulated-postscript-woman-man.png",
                           child: Container(),
                           compnayTitle: "Dhaka Video",
